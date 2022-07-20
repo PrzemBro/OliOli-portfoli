@@ -28,6 +28,18 @@ body{
     background-position: center;
     background-repeat: no-repeat;
 }
+.slogan{
+    position: fixed;
+    left: 30px;
+    top: 100px;
+    /* transform: translate(-50%, -50%); */
+    width: 65px;
+    /* font-size: 6rem; */
+    font-family: 'Big Shoulders Text', cursive;
+    letter-spacing: 4px;
+    font-weight: 400;
+    color: #fff;
+}
 canvas{
     position: fixed;
     left: 0;
@@ -214,6 +226,12 @@ section.nav p, .about p .contact p{
     font-size: 1.4em;
     /* color: var(--secondColor); */
     color: #fff;
+}
+section.nav p:first-child{
+    font-size: 2.2em;
+}
+.contact p:first-child{
+    font-size: 1.6em;
 }
 section.nav i, .contact i{
     font-size: 1.6em;

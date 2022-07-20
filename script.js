@@ -1,6 +1,6 @@
-const servicePic = ['url("img/Retouch 600 x1000.png")', 'url("img/interior 600x1000.png")', 'url("img/web 600x1000.png")'];
-const serviceHeader = ["Retouching", "3d design", "Web design"];
-const serviceText = ["beauty, nature, real estate, interior, product", "product presentation, interior visualisation, real estate visualisation", "Front end service in html, css, javascript technology"];
+const servicePic = ['url("img/web 600x1000.png")', 'url("img/Retouch 600 x1000.png")', 'url("img/interior 600x1000.png")'];
+const serviceHeader = ["Web design", "Retouching", "3d design"];
+const serviceText = ["Front end service in html, css, javascript technology", "beauty, nature, real estate, interior, product", "product presentation, interior visualisation, real estate visualisation"];
 const serviceImg = document.querySelector('.services div');
 const serviceH1 = document.querySelector('.services h1');
 const serviceP = document.querySelector('.services p');
@@ -54,63 +54,110 @@ menuLi.forEach(li =>{
     })
 })
 
-// zawartosc sekcji servis zminiana za pomoca przesuniecia palcem po ekranie, jeszcze nie dziala
+
+
+
+// deklaracje zmiennych do animacja pojawiania sie zawartosci sekcji "services"
+const opacityAnimate = [
+  { opacity: '0' },
+  { opacity: '1' },
+];
+
+const appearAnimate = [
+  { clipPath : "polygon(50% 0, 50% 0, 50% 100%, 50% 100%)" },
+  { clipPath : "polygon(0 0, 100% 0, 100% 100%, 0 100%)" },
+];
+
+const textAppearAnimate = [
+  { clipPath : "polygon(0 0, 100% 0, 100% 0, 0 0)" },
+  { clipPath : "polygon(0 0, 100% 0, 100% 100%, 0 100%)" },
+]
+
+const showTiming = {
+  duration: 1000,
+  iterations: 1,
+}
+
+const clipTiming = {
+  duration: 1000,
+  iterations: 1,
+}
+
+const textClipingTiming = {
+  duration: 1000,
+  iterations: 1,
+}
+
+
+
+
+// SWIPE IMPLEMENTATION
+let startingY, movingY;
+let moving = false;
 let activeElement = 0;
 
+// przypisanie wstepnych styli i zawartosci sekcji "services", nie zwiazane z mplementacja "swipe"
 serviceImg.style.backgroundImage = servicePic[activeElement];
 serviceH1.textContent = serviceHeader[activeElement];
 serviceP.textContent = serviceText[activeElement];
 
-function changeContent(){
+document.querySelector('.mainContainer').addEventListener('touchstart', (e) => {
+  startingY = e.touches[0].clientY;
+  // console.log("start" + startingY)
+});
+
+document.querySelector('.mainContainer').addEventListener('touchmove', (e) => {
+  moving = true;
+  movingY = e.touches[0].clientY
+  // console.log("move" + movingY)
+});
+
+document.querySelector('.mainContainer').addEventListener('touchend', (e) => {
+
+  //swipe down
+  if( startingY - movingY < -100){
     activeElement++;
+
     if(activeElement == 3){
         activeElement = 0
     }
+  
+    // podmiana styli i zawartosci sekcji "services", nie zwiazane z mplementacja "swipe"
     serviceH1.textContent = serviceHeader[activeElement];
     serviceImg.style.backgroundImage = servicePic[activeElement];
     serviceP.textContent = serviceText[activeElement];
 
-    // animacja pojawiania sie
-    const opacityAnimate = [
-        { opacity: '0' },
-        { opacity: '1' },
-      ];
+    // animowanie pojawiajacych sie styli i zawartosci sekcji "services". Deklaracja zmiennych powyzej. Nie zwiazane z implementacja "swipe"
+    serviceDiv.animate(appearAnimate, clipTiming);
+    serviceH1.animate(appearAnimate, clipTiming);
+    serviceP.animate(textAppearAnimate, textClipingTiming);
+    serviceImg.animate(opacityAnimate, showTiming);
+  }
 
-      const appearAnimate = [
-        { clipPath : "polygon(50% 0, 50% 0, 50% 100%, 50% 100%)" },
-        { clipPath : "polygon(0 0, 100% 0, 100% 100%, 0 100%)" },
-      ];
+  // swipe up
+  else if( startingY - movingY > 100 ){
+    activeElement--;
 
-      const textAppearAnimate = [
-        { clipPath : "polygon(0 0, 100% 0, 100% 0, 0 0)" },
-        { clipPath : "polygon(0 0, 100% 0, 100% 100%, 0 100%)" },
-      ]
+    if(activeElement == -1){
+      activeElement = 2
+  }
 
-      const showTiming = {
-        duration: 1000,
-        iterations: 1,
-      }
+  // podmiana styli i zawartosci sekcji "services", nie zwiazane z mplementacja "swipe"
+  serviceH1.textContent = serviceHeader[activeElement];
+  serviceImg.style.backgroundImage = servicePic[activeElement];
+  serviceP.textContent = serviceText[activeElement];
 
-      const clipTiming = {
-        duration: 1000,
-        iterations: 1,
-      }
-
-      const textClipingTiming = {
-        duration: 1000,
-        iterations: 1,
-      }
-
-        serviceDiv.animate(appearAnimate, clipTiming);
-        serviceH1.animate(appearAnimate, clipTiming);
-        serviceP.animate(textAppearAnimate, textClipingTiming);
-        serviceImg.animate(opacityAnimate, showTiming);
-    
+  // animowanie pojawiajacych sie styli i zawartosci sekcji "services". Deklaracja zmiennych powyzej. Nie zwiazane z implementacja "swipe"
+  serviceDiv.animate(appearAnimate, clipTiming);
+  serviceH1.animate(appearAnimate, clipTiming);
+  serviceP.animate(textAppearAnimate, textClipingTiming);
+  serviceImg.animate(opacityAnimate, showTiming);
 }
-document.querySelector('.mainContainer .services').addEventListener('touchstart', changeContent);
+  }
+    );
 
 
-
+// TLO
 let canvas =  document.querySelector("#c");
 
 const loader = new THREE.TextureLoader();
